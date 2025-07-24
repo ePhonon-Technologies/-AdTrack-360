@@ -1,153 +1,187 @@
-# 🛒 CSV to GCP Retail ETL Project
+# 📊 AdTrack 360 & Retail ETL Suite
 
-This project demonstrates a complete ETL pipeline using **Apache Airflow**, **Google Cloud Platform (GCP)**, **dbt**, and **Soda Core**.  
-It ingests raw CSV data → uploads to **Google Cloud Storage (GCS)** → loads into **BigQuery** → transforms using **dbt** → validates using **Soda**.
+![Banner](https://via.placeholder.com/1200x400/6366f1/ffffff?text=AdTrack+360+%26+Retail+ETL+Suite)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
+[![Airflow](https://img.shields.io/badge/Airflow-2.6+-blue)](https://airflow.apache.org/)
 
----
-
-## 📌 Project Summary
-
-- **Project Name**: CSV to GCP Retail ETL Migration  
-- **Stack**: Airflow · GCS · BigQuery · dbt · Soda Core · Docker · Astro CLI  
-- **Flow**: `Local CSV → GCS → BigQuery (raw) → dbt → BigQuery (star schema) → Soda validation`
+**Comprehensive advertising analytics and retail data processing platform**
 
 ---
 
-## 🧠 Key Contributions
+## 🌟 Overview
 
-- Dockerized Airflow using **Astronomer Runtime**
-- Built Airflow DAG: `retail.py`
-- Automated:
-  - Uploading CSVs to GCS
-  - Loading data to BigQuery
-  - Running **Soda** checks for both raw and transformed layers
-  - Running **dbt** models to create a star schema
-- Designed star schema with:
-  - `customer_dimention_table`
-  - `product_dimention_table`
-  - `datetime_dimention_table`
-  - `Retail_invoice_fact_table`
-- Integrated **Soda Core** for continuous data validation
-- Prepared the foundation for **Metabase** dashboarding
+### 📢 AdTrack 360
+Multi-platform advertising performance tracking with automated reporting:
+- Cross-channel campaign monitoring
+- Scheduled performance reports
+- Unified analytics dashboard
 
----
-
-## 🔄 ETL Pipeline Flow (Airflow DAG)
-
-### 🟢 1. Upload CSVs to GCS
-
-- `Online_Retail.csv` → `raw/Online_Retail.csv`
-- `country_data.csv` → `raw/country_data.csv`
-
-### 📥 2. Load into BigQuery
-
-- GCS → `retail.raw_retail_data`
-- GCS → `retail.raw_country_data`
-
-### 🔍 3. Run Raw Data Checks (via Soda)
-
-- `run_load_data_quality_checks()`
-- Schema check, nulls, data types
-
-### 🧱 4. Transform Data with dbt
-
-- `customer_dimention_table.sql`
-- `product_dimention_table.sql`
-- `datetime_dimention_table.sql`
-- `Retail_invoice_fact_table.sql`
-
-### ✅ 5. Post-Transformation Validation (via Soda)
-
-- `run_transform_data_quality_checks()`
-- Ensures uniqueness, null safety, referential integrity
+### 🛒 Retail ETL Pipeline
+End-to-end data processing system:
+- CSV → GCS → BigQuery ingestion
+- dbt transformations
+- Data quality validation
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Tool        | Purpose                                |
-|-------------|----------------------------------------|
-| **Airflow** | ETL Orchestration                      |
-| **GCS**     | Cloud-based raw data storage           |
-| **BigQuery**| Cloud Data Warehouse                   |
-| **dbt**     | Data Modeling and SQL Transformations  |
-| **Soda**    | Data Validation and Quality Monitoring |
-| **Docker**  | Development Environment                |
-| **Astro CLI**| Local Dev & Deployment for Airflow   |
+### AdTrack 360
+| Component       | Technology |
+|-----------------|------------|
+| **Orchestration** | Airflow |
+| **Data Warehouse** | BigQuery |
+| **Transformation** | dbt |
+| **Visualization** | Looker Studio |
+| **Infrastructure** | Docker |
+
+### Retail ETL
+| Component       | Technology |
+|-----------------|------------|
+| **Orchestration** | Airflow (Astro CLI) |
+| **Storage** | Google Cloud Storage |
+| **Processing** | BigQuery, dbt |
+| **Validation** | Soda Core |
+| **Infrastructure** | Docker |
 
 ---
 
-## 🧊 Data Models
+## 🚀 Key Features
 
-### `customer_dimention_table`
+### AdTrack 360
+- 📅 Scheduled report generation
+- 📊 Unified campaign performance views
+- 🔄 Automated data refreshes
+- 📈 Custom KPI tracking
 
-- Combines `CustomerID + Country` → `customer_id`
-- Adds country ISO from `raw_country_data`
-
-### `product_dimention_table`
-
-- Deduplicates `StockCode + Description + UnitPrice`  
-- Ensures only valid products
-
-### `datetime_dimention_table`
-
-- Parses multiple formats of `InvoiceDate`
-- Extracts `year`, `month`, `day`, `hour`, `minute`, `weekday`
-
-### `Retail_invoice_fact_table`
-
-- Joins all dimension keys
-- Computes `InvoiceTotal`
-- Ensures surrogate key generation
+### Retail ETL
+- 🔄 End-to-end CSV processing pipeline
+- 🧩 Modular dbt transformations
+- ✅ Comprehensive data validation
+- 🐳 Dockerized development environment
+- 🌟 Star schema data modeling
 
 ---
 
-## ✅ Soda Checks Summary
+## 📊 Data Architecture
 
-| Table                    | Validations                                     |
-|--------------------------|-------------------------------------------------|
-| `raw_retail_data`        | Schema match, null checks, data type validation |
-| `customer_dimention_table`| Unique keys, no nulls, schema integrity         |
-| `product_dimention_table`| No duplicates, positive pricing                 |
-| `datetime_dimention_table`| Date parts valid, weekday range checks         |
-| `Retail_invoice_fact_table`| Referential integrity, positive totals         |
+``mermaid
+graph TD
+    A[CSV Sources] --> B[GCS Bucket]
+    B --> C[BigQuery Raw]
+    C --> D[dbt Transformations]
+    D --> E[BigQuery Analytics]
+    E --> F[Looker Studio]
+    E --> G[Soda Validation]
 
----
+🧩 Retail ETL Pipeline Details
+🔄 ETL Flow
+Ingestion:
 
-## 🧪 How to Run Locally
+CSV → GCS (raw zone)
 
-### 🚀 Start the Dev Environment
+GCS → BigQuery (raw tables)
 
+Transformation:
+
+Raw → Star schema via dbt
+
+Dimension tables:
+
+Customers
+
+Products
+
+Time
+
+Fact tables:
+
+Retail invoices
+
+Validation:
+
+Schema checks
+
+Data quality rules
+
+Referential integrity
+
+🏗️ Project Structure
+text
+├── adtrack360/
+│   ├── dags/               # Airflow pipelines
+│   ├── dbt/                # Transformation models
+│   └── reports/            # Generated outputs
+├── retail_etl/
+│   ├── dags/               # Retail DAGs
+│   ├── dbt/                # Retail models
+│   └── soda/               # Data quality checks
+├── docker-compose.yml      # Local development
+└── README.md               # This file
+🚀 Getting Started
+Prerequisites
+Docker Desktop
+
+Google Cloud account
+
+Python 3.10+
+
+Installation
+bash
+git clone https://github.com/yourrepo/data-suite.git
+cd data-suite
+
+# Start services
+docker-compose up -d
+
+# Initialize Airflow
 astro dev start
-
-🪂 Test Airflow Task (Example)
+Running Pipelines
 bash
-Copy
-Edit
-airflow tasks test retail upload_retail_csv_to_gcs 2025-01-01
-🧱 Run dbt Models
+# Trigger AdTrack pipeline
+airflow dags trigger adtrack_daily
+
+# Run retail ETL
+airflow dags trigger retail_processing
+📊 Sample Outputs
+AdTrack Dashboard
+https://via.placeholder.com/600x400?text=AdTrack+Dashboard
+
+Retail Data Model
+sql
+-- Example dbt model
+SELECT
+    customer_id,
+    SUM(amount) as lifetime_value
+FROM {{ ref('fact_orders') }}
+GROUP BY 1
+🤝 Contributing
+Fork the repository
+
+Create your feature branch:
+
 bash
-Copy
-Edit
-source /usr/local/airflow/dbt_venv/bin/activate
-cd include/dbt
-dbt run --profiles-dir /usr/local/airflow/include/dbt/
-🧪 Run Soda Scans
-bash
-Copy
-Edit
-source /usr/local/airflow/soda_venv/bin/activate
-soda scan -d retail -c include/soda/configuration.yml include/soda/checks/*
-🎯 Final Outcome
-✅ Loaded and modeled retail data from CSVs into BigQuery
+git checkout -b feature/amazing-feature
+Commit your changes
 
-✅ Created a reliable Airflow DAG for orchestration
+Push to the branch
 
-✅ Designed a normalized star schema using dbt
+Open a pull request
 
-✅ Applied strong data validation practices with Soda Core
-
-✅ Delivered analytics-ready tables for BI integration
+📜 License
+Distributed under the MIT License. See LICENSE for more information.
 
 
+Key Features:
+Unified Presentation: Combines both projects in a cohesive way
 
+Visual Hierarchy: Clear section separation with emoji headers
+
+Tech Badges: Quick visibility of core technologies
+
+Mermaid Diagram: Visual pipeline representation
+
+Structured Layout: Consistent formatting throughout
+
+Responsive Design: Looks good on GitHub and other markdown viewers
